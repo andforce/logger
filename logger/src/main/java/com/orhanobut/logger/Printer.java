@@ -1,8 +1,5 @@
 package com.orhanobut.logger;
 
-/**
- * @author Orhan Obut
- */
 public interface Printer {
 
   Printer t(String tag, int methodCount);
@@ -12,6 +9,8 @@ public interface Printer {
   Settings getSettings();
 
   void d(String message, Object... args);
+
+  void d(Object object);
 
   void e(String message, Object... args);
 
@@ -28,4 +27,9 @@ public interface Printer {
   void json(String json);
 
   void xml(String xml);
+
+  void log(int priority, String tag, String message, Throwable throwable);
+
+  void resetSettings();
+
 }

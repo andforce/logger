@@ -1,9 +1,9 @@
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Logger-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/1658) [![](https://img.shields.io/badge/AndroidWeekly-%23147-blue.svg)](http://androidweekly.net/issues/issue-147)
-[![Join the chat at https://gitter.im/orhanobut/logger](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/orhanobut/logger?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/orhanobut/logger](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/orhanobut/logger?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) <a href="http://www.methodscount.com/?lib=com.orhanobut%3Alogger%3A1.15"><img src="https://img.shields.io/badge/Methods and size-165 | 12 KB-e91e63.svg"/></a> [![Build Status](https://travis-ci.org/orhanobut/logger.svg?branch=master)](https://travis-ci.org/orhanobut/logger)
 
 <img align="right" src='https://github.com/orhanobut/logger/blob/master/images/logger-logo.png' width='128' height='128'/>
 
-###Logger
+### Logger
 Simple, pretty and powerful logger for android
 
 Logger provides :
@@ -15,9 +15,9 @@ Logger provides :
 - Clean output
 - Jump to source
 
-### Gradle
+### Download
 ```groovy
-compile 'com.orhanobut:logger:1.11'
+compile 'com.orhanobut:logger:1.15'
 ```
 
 ### Current Log system
@@ -35,7 +35,6 @@ Logger.d("hello %s %d", "world", 5);   // String.format
 ```
 <img src='https://github.com/orhanobut/logger/blob/master/images/description.png'/>
 
-### Usage
 ```java
 Logger.d("hello");
 Logger.e("hello");
@@ -44,6 +43,20 @@ Logger.v("hello");
 Logger.wtf("hello");
 Logger.json(JSON_CONTENT);
 Logger.xml(XML_CONTENT);
+Logger.log(DEBUG, "tag", "message", throwable);
+```
+
+#### String format arguments are supported
+```java
+Logger.d("hello %s", "world");
+```
+
+#### Array, Map, Set and List are supported
+```java
+Logger.d(list);
+Logger.d(map);
+Logger.d(set);
+Logger.d(new String[]);
 ```
 
 ### Change TAG
@@ -60,24 +73,26 @@ Logger.t("mytag").d("hello");
 
 ### Settings (optional)
 Change the settings with init. This should be called only once. Best place would be in application class. All of them
- are optional.
+ are optional. You can just use the default settings if you don't init Logger.
 ```java
-public class MyApplication extends Application {
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        Logger
-             .init(YOUR_TAG)               // default PRETTYLOGGER or use just init()
-             .setMethodCount(3)            // default 2
-             .hideThreadInfo()             // default shown
-             .setLogLevel(LogLevel.NONE);  // default LogLevel.FULL
-             .setMethodOffset(2)           // default 0
-    }
+Logger
+  .init(YOUR_TAG)                 // default PRETTYLOGGER or use just init()
+  .methodCount(3)                 // default 2
+  .hideThreadInfo()               // default shown
+  .logLevel(LogLevel.NONE)        // default LogLevel.FULL
+  .methodOffset(2)                // default 0
+  .logAdapter(new AndroidLogAdapter()); //default AndroidLogAdapter
 }
+
 ```
 Note: Use LogLevel.NONE for the release versions.
+
+### Use another log util instead of android.util.log
+- Implement LogAdapter
+- set it with init
+```java
+.logAdapter(new CustomLogAdapter())
+```
 
 ### More log samples
 ```java
@@ -104,7 +119,7 @@ Both method information will be shown in the order of invocation.
 ### Change method count (Default: 2)
 All logs
 ```java
-Logger.init().setMethodCount(1);
+Logger.init().methodCount(1);
 ```
 Log based
 ```java
@@ -116,19 +131,19 @@ Logger.t(1).d("hello");
 ### Change method stack offset (Default: 0)
 To integrate logger with other libraries, you can set the offset in order to avoid that library's methods.
 ```java
-Logger.init().setMethodOffset(5);
+Logger.init().methodOffset(5);
 ```
 
 ### Hide thread information
 ```java
-Logger.init().setMethodCount(1).hideThreadInfo();
+Logger.init().methodCount(1).hideThreadInfo();
 ```
 
 <img src='https://github.com/orhanobut/logger/blob/master/images/one-method-no-header.png'/>
 
 ### Only show the message
 ```java
-Logger.init().setMethodCount(0).hideThreadInfo();
+Logger.init().methodCount(0).hideThreadInfo();
 ```
 
 <img src='https://github.com/orhanobut/logger/blob/master/images/just-content.png'/>
@@ -156,13 +171,15 @@ Logger.e(exception,"message");
 
 <img src='https://github.com/orhanobut/logger/blob/master/images/wrap-closed.png'/>
 
-
-#### You might also like
-- [Hawk](https://github.com/orhanobut/hawk) Simple,powerful,secure key-value storage
-- [Wasp](https://github.com/orhanobut/wasp) All-in-one network solution
-- [Bee](https://github.com/orhanobut/bee) QA/Debug tool
-- [DialogPlus](https://github.com/orhanobut/dialogplus) Easy,simple dialog solution
-- [SimpleListView](https://github.com/orhanobut/simplelistview) Simple basic listview implementation with linearlayout
+### Timber Integration
+You can also use logger along with Timber.
+```java
+Timber.plant(new Timber.DebugTree() {
+  @Override protected void log(int priority, String tag, String message, Throwable t) {
+    Logger.log(priority, tag, message, t);
+  }
+});
+```
 
 ###License
 <pre>

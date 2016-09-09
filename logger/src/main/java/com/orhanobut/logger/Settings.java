@@ -1,16 +1,14 @@
 package com.orhanobut.logger;
 
-/**
- * @author Orhan Obut
- */
 public final class Settings {
 
   private int methodCount = 2;
   private boolean showThreadInfo = true;
   private int methodOffset = 0;
+  private LogAdapter logAdapter;
 
   /**
-   * Determines how logs will printed
+   * Determines to how logs will be printed
    */
   private LogLevel logLevel = LogLevel.FULL;
 
@@ -19,7 +17,7 @@ public final class Settings {
     return this;
   }
 
-  public Settings setMethodCount(int methodCount) {
+  public Settings methodCount(int methodCount) {
     if (methodCount < 0) {
       methodCount = 0;
     }
@@ -27,13 +25,18 @@ public final class Settings {
     return this;
   }
 
-  public Settings setLogLevel(LogLevel logLevel) {
+  public Settings logLevel(LogLevel logLevel) {
     this.logLevel = logLevel;
     return this;
   }
 
-  public Settings setMethodOffset(int offset) {
+  public Settings methodOffset(int offset) {
     this.methodOffset = offset;
+    return this;
+  }
+
+  public Settings logAdapter(LogAdapter logAdapter) {
+    this.logAdapter = logAdapter;
     return this;
   }
 
@@ -51,5 +54,19 @@ public final class Settings {
 
   public int getMethodOffset() {
     return methodOffset;
+  }
+
+  public LogAdapter getLogAdapter() {
+    if (logAdapter == null) {
+      logAdapter = new AndroidLogAdapter();
+    }
+    return logAdapter;
+  }
+
+  public void reset() {
+    methodCount = 2;
+    methodOffset = 0;
+    showThreadInfo = true;
+    logLevel = LogLevel.FULL;
   }
 }

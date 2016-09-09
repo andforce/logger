@@ -3,13 +3,18 @@ package com.orhanobut.logger;
 /**
  * Logger is a wrapper of {@link android.util.Log}
  * But more pretty, simple and powerful
- *
- * @author Orhan Obut
  */
 public final class Logger {
+  public static final int DEBUG = 3;
+  public static final int ERROR = 6;
+  public static final int ASSERT = 7;
+  public static final int INFO = 4;
+  public static final int VERBOSE = 2;
+  public static final int WARN = 5;
 
-  private static final Printer printer = new LoggerPrinter();
   private static final String DEFAULT_TAG = "PRETTYLOGGER";
+
+  private static Printer printer = new LoggerPrinter();
 
   //no instance
   private Logger() {
@@ -21,16 +26,21 @@ public final class Logger {
    * @return the settings object
    */
   public static Settings init() {
-    return printer.init(DEFAULT_TAG);
+    return init(DEFAULT_TAG);
   }
 
   /**
    * It is used to change the tag
    *
-   * @param tag is the given string which will be used in Logger
+   * @param tag is the given string which will be used in Logger as TAG
    */
   public static Settings init(String tag) {
+    printer = new LoggerPrinter();
     return printer.init(tag);
+  }
+
+  public static void resetSettings() {
+    printer.resetSettings();
   }
 
   public static Printer t(String tag) {
@@ -45,8 +55,16 @@ public final class Logger {
     return printer.t(tag, methodCount);
   }
 
+  public static void log(int priority, String tag, String message, Throwable throwable) {
+    printer.log(priority, tag, message, throwable);
+  }
+
   public static void d(String message, Object... args) {
     printer.d(message, args);
+  }
+
+  public static void d(Object object) {
+    printer.d(object);
   }
 
   public static void e(String message, Object... args) {
